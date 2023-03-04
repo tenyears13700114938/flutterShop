@@ -35,11 +35,18 @@ class ProductItem extends StatelessWidget {
                     ? Icons.shopping_cart
                     : Icons.shopping_cart_outlined),
                 onPressed: () {
+                  final snackMessage = !cart.hasItem(product.id)
+                      ? "add item to cart!"
+                      : "remove item from cart!";
                   cart.toggleItem(CartItem(
                       id: product.id,
                       title: product.title,
                       quantity: 1,
                       price: product.price));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(snackMessage),
+                    duration: const Duration(seconds: 2),
+                  ));
                 },
               );
             },
