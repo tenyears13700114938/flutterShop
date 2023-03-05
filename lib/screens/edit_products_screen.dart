@@ -20,6 +20,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   final _form = GlobalKey<FormState>();
   var _product =
       Product(id: "", title: "", description: "", imageUrl: "", price: 0);
+  var _isInit = false;
 
   @override
   void initState() {
@@ -31,6 +32,20 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
         setState(() {});
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInit) {
+      final argumentProduct =
+          ModalRoute.of(context)?.settings.arguments as Product?;
+      if (argumentProduct != null) {
+        _product = argumentProduct;
+        _imageUrlEditingController.text = _product.imageUrl;
+      }
+    }
+    _isInit = true;
   }
 
   @override
@@ -54,6 +69,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
             TextFormField(
               decoration: const InputDecoration(labelText: "title"),
               textInputAction: TextInputAction.next,
+              initialValue: _product.title,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "please input title..";
@@ -75,6 +91,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
               decoration: const InputDecoration(labelText: "price"),
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
+              initialValue: _product.price.toString(),
               validator: (value) {
                 if (value == null) {
                   return "please input price..";
@@ -99,6 +116,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
               decoration: const InputDecoration(labelText: "description"),
               keyboardType: TextInputType.multiline,
               maxLines: 3,
+              initialValue: _product.description,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "please input your description..";
@@ -184,7 +202,11 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
       return;
     }
     _form.currentState?.save();
-    Provider.of<Products>(context, listen: false).addProduct(_product);
+    if (_product.id.isEmpty) {
+      Provider.of<Products>(context, listen: false).addProduct(_product);
+    } else {
+      Provider.of<Products>(context, listen: false).updateProduct(_product);
+    }
     Navigator.of(context).pop();
   }
 }

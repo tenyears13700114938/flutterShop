@@ -99,4 +99,18 @@ class Products with ChangeNotifier {
         imageUrl: product.imageUrl));
     notifyListeners();
   }
+
+  void updateProduct(Product product) {
+    final index =
+        _localProducts.indexWhere((element) => element.id == product.id);
+    if (index != -1) {
+      _localProducts[index] = product;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    _localProducts.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }
