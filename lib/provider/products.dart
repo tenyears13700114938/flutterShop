@@ -1,81 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'product.dart';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  final List<Product> _localProducts = [
-    Product(
-        id: "p1",
-        title: "beach sunset",
-        description: "very beautiful...",
-        price: 80,
-        imageUrl: "https://picsum.photos/250?image=9"),
-    Product(
-        id: "p2",
-        title: "monkey",
-        description: "i like monkey...",
-        price: 90,
-        imageUrl: "https://picsum.photos/250?image=8"),
-    Product(
-        id: "p3",
-        title: "bird",
-        description: "fly in the sky...",
-        price: 99,
-        imageUrl: "https://picsum.photos/250?image=7"),
-    Product(
-        id: "p4",
-        title: "gorilla",
-        description: "it is black...",
-        price: 100,
-        imageUrl: "https://picsum.photos/250?image=6"),
-    Product(
-        id: "p5",
-        title: "beach sunset",
-        description: "very beautiful...",
-        price: 80,
-        imageUrl: "https://picsum.photos/250?image=9"),
-    Product(
-        id: "p6",
-        title: "monkey",
-        description: "i like monkey...",
-        price: 90,
-        imageUrl: "https://picsum.photos/250?image=8"),
-    Product(
-        id: "p7",
-        title: "bird",
-        description: "fly in the sky...",
-        price: 99,
-        imageUrl: "https://picsum.photos/250?image=7"),
-    Product(
-        id: "p4",
-        title: "gorilla",
-        description: "it is black...",
-        price: 100,
-        imageUrl: "https://picsum.photos/250?image=6"),
-    Product(
-        id: "p8",
-        title: "beach sunset",
-        description: "very beautiful...",
-        price: 80,
-        imageUrl: "https://picsum.photos/250?image=9"),
-    Product(
-        id: "p9",
-        title: "monkey",
-        description: "i like monkey...",
-        price: 90,
-        imageUrl: "https://picsum.photos/250?image=8"),
-    Product(
-        id: "p10",
-        title: "bird",
-        description: "fly in the sky...",
-        price: 99,
-        imageUrl: "https://picsum.photos/250?image=7"),
-    Product(
-        id: "p11",
-        title: "gorilla",
-        description: "it is black...",
-        price: 100,
-        imageUrl: "https://picsum.photos/250?image=6")
-  ];
+  final List<Product> _localProducts = [];
+
+  static const baseUrl =
+      "https://tenyears-flutter-shop-project-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
   List<Product> get products => [..._localProducts];
 
@@ -83,29 +16,68 @@ class Products with ChangeNotifier {
       _localProducts.where((element) => element.isFavorite).toList();
 
   Products() {
-    notifyListeners();
+    http.get(Uri.parse("${baseUrl}products.json")).then((value) {
+      final Map<String, dynamic> productMap = jsonDecode(value.body);
+      for (var entry in productMap.entries) {
+        _localProducts.add(Product(
+            id: entry.key,
+            title: entry.value['title'],
+            description: entry.value['description'],
+            price: entry.value['price'],
+            imageUrl: entry.value['imageUrl'],
+            isFavorite: entry.value['isFavorite']));
+      }
+      notifyListeners();
+    });
   }
 
   Product findById(String id) {
     return _localProducts.firstWhere((element) => element.id == id);
   }
 
-  void addProduct(Product product) {
-    _localProducts.add(Product(
-        id: DateTime.now().toString(),
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl));
-    notifyListeners();
+  Future<void> addProduct(Product product) async {
+    try {
+      final response = await http.post(Uri.parse("${baseUrl}products.json"),
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+            'isFavorite': product.isFavorite,
+          }));
+      //await Future.delayed(Duration(milliseconds: 3000));
+      final body = json.decode(response.body);
+      _localProducts.add(Product(
+          id: body['id'].toString(),
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl));
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
   }
 
-  void updateProduct(Product product) {
-    final index =
-        _localProducts.indexWhere((element) => element.id == product.id);
-    if (index != -1) {
-      _localProducts[index] = product;
-      notifyListeners();
+  Future<void> updateProduct(Product product) async {
+    try {
+      await http.patch(Uri.parse("$baseUrl${product.id}.json"),
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+            'isFavorite': product.isFavorite,
+          }));
+      //await Future.delayed(Duration(milliseconds: 3000));
+      final index =
+          _localProducts.indexWhere((element) => element.id == product.id);
+      if (index != -1) {
+        _localProducts[index] = product;
+        notifyListeners();
+      }
+    } catch (error) {
+      rethrow;
     }
   }
 
