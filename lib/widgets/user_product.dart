@@ -29,7 +29,15 @@ class UserProduct extends StatelessWidget {
               icon: const Icon(Icons.edit)),
           IconButton(
             onPressed: () {
-              Provider.of<Products>(context, listen: false).deleteProduct(product.id);
+              Provider.of<Products>(context, listen: false)
+                  .deleteProduct(product.id)
+                  .onError((error, stackTrace) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("delete product failed..",
+                      style: TextStyle(color: Theme.of(context).errorColor)),
+                  duration: const Duration(seconds: 2),
+                ));
+              });
             },
             icon: const Icon(Icons.delete),
             color: Theme.of(context).errorColor,

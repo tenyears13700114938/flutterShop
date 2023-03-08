@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:26348622407:ios:24e0c59e0bf4a125159762</string>
+	<key>DATABASE_URL</key>
+	<string>https://tenyears-flutter-shop-project-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

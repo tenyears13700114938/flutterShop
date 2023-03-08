@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'product.dart';
-import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   final List<Product> _localProducts = [];
@@ -15,19 +15,24 @@ class Products with ChangeNotifier {
   List<Product> get favoriteProducts =>
       _localProducts.where((element) => element.isFavorite).toList();
 
-  Products() {
-    http.get(Uri.parse("${baseUrl}products.json")).then((value) {
-      final Map<String, dynamic> productMap = jsonDecode(value.body);
-      for (var entry in productMap.entries) {
-        _localProducts.add(Product(
-            id: entry.key,
-            title: entry.value['title'],
-            description: entry.value['description'],
-            price: entry.value['price'],
-            imageUrl: entry.value['imageUrl'],
-            isFavorite: entry.value['isFavorite']));
+  Future<void> fetchAndSetProducts() async {
+    final ref = FirebaseDatabase.instance.ref("products");
+    ref.get().then((snapShot) {
+      if (snapShot.exists) {
+        _localProducts.clear();
+        for (var entry in snapShot.children) {
+          final key = entry.key!;
+          final value = entry.value as Map<dynamic, dynamic>;
+          _localProducts.add(Product(
+              id: key,
+              title: value['title'],
+              description: value['description'],
+              price: double.parse(value['price'].toString()),
+              imageUrl: value['imageUrl'],
+              isFavorite: value['isFavorite']));
+        }
+        notifyListeners();
       }
-      notifyListeners();
     });
   }
 
@@ -36,52 +41,46 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    try {
-      final response = await http.post(Uri.parse("${baseUrl}products.json"),
-          body: json.encode({
-            'title': product.title,
-            'description': product.description,
-            'imageUrl': product.imageUrl,
-            'price': product.price,
-            'isFavorite': product.isFavorite,
-          }));
-      //await Future.delayed(Duration(milliseconds: 3000));
-      final body = json.decode(response.body);
-      _localProducts.add(Product(
-          id: body['id'].toString(),
-          title: product.title,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl));
-      notifyListeners();
-    } catch (error) {
-      rethrow;
-    }
+    final ref = FirebaseDatabase.instance.ref("products");
+    final newKey = ref.push().key;
+    await ref.child("$newKey").set({
+      'title': product.title,
+      'description': product.description,
+      'imageUrl': product.imageUrl,
+      'price': product.price,
+      'isFavorite': product.isFavorite,
+    });
+    //await Future.delayed(Duration(milliseconds: 3000));
+    _localProducts.add(Product(
+        id: newKey!,
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl));
+    notifyListeners();
   }
 
   Future<void> updateProduct(Product product) async {
-    try {
-      await http.patch(Uri.parse("$baseUrl${product.id}.json"),
-          body: json.encode({
-            'title': product.title,
-            'description': product.description,
-            'imageUrl': product.imageUrl,
-            'price': product.price,
-            'isFavorite': product.isFavorite,
-          }));
-      //await Future.delayed(Duration(milliseconds: 3000));
-      final index =
-          _localProducts.indexWhere((element) => element.id == product.id);
-      if (index != -1) {
-        _localProducts[index] = product;
-        notifyListeners();
-      }
-    } catch (error) {
-      rethrow;
+    final ref = FirebaseDatabase.instance.ref("products").child(product.id);
+    await ref.update({
+      'title': product.title,
+      'description': product.description,
+      'imageUrl': product.imageUrl,
+      'price': product.price,
+      'isFavorite': product.isFavorite,
+    });
+    //await Future.delayed(Duration(milliseconds: 3000));
+    final index =
+        _localProducts.indexWhere((element) => element.id == product.id);
+    if (index != -1) {
+      _localProducts[index] = product;
+      notifyListeners();
     }
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
+    final ref = FirebaseDatabase.instance.ref("products").child(id);
+    await ref.remove();
     _localProducts.removeWhere((element) => element.id == id);
     notifyListeners();
   }

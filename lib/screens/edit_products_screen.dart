@@ -219,12 +219,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      }).onError((error, stackTrace) async {
+      }).onError((error, stackTrace) {
         setState(() {
           _isLoading = false;
         });
-        await showWarningDialog();
-        Navigator.of(context).pop();
+        showWarningDialog().then((value) {
+          Navigator.of(context).pop();
+        });
       });
     } else {
       Provider.of<Products>(context, listen: false)
@@ -234,12 +235,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      }).onError((error, stackTrace) async {
+      }).onError((error, stackTrace) {
         setState(() {
           _isLoading = false;
         });
-        await showWarningDialog();
-        Navigator.of(context).pop();
+        showWarningDialog().then((value) {
+          Navigator.of(context).pop();
+        });
       });
     }
   }

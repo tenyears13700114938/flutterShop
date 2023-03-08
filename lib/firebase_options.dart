@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:26348622407:android:ffc5701c39b11d7d159762',
     messagingSenderId: '26348622407',
     projectId: 'tenyears-flutter-shop-project',
+    databaseURL: 'https://tenyears-flutter-shop-project-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tenyears-flutter-shop-project.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:26348622407:ios:24e0c59e0bf4a125159762',
     messagingSenderId: '26348622407',
     projectId: 'tenyears-flutter-shop-project',
+    databaseURL: 'https://tenyears-flutter-shop-project-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tenyears-flutter-shop-project.appspot.com',
     iosClientId: '26348622407-c7imn5bk6egvckjm3hpoq3i84n26ts2u.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterShopApp',
