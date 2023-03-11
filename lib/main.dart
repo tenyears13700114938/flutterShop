@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/provider/cart.dart';
 import 'package:flutter_shop_app/provider/orders.dart';
 import 'package:flutter_shop_app/provider/products.dart';
+import 'package:flutter_shop_app/screens/auth_screen.dart';
 import 'package:flutter_shop_app/screens/cart_screen.dart';
 import 'package:flutter_shop_app/screens/edit_products_screen.dart';
 import 'package:flutter_shop_app/screens/order_screen.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: const ProductsOverviewScreen(),
+        home: const AuthScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) {
             return const ProductDetailScreen();
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
           },
           EditProductsScreen.routeName: (ctx) {
             return const EditProductsScreen();
+          },
+          AuthScreen.routeName: (ctx) {
+            return const AuthScreen();
           }
         },
       ),
