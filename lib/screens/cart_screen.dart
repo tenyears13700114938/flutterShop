@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/widgets/cart_card.dart';
+import 'package:flutter_shop_app/widgets/loading_text_button.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/cart.dart';
@@ -31,28 +32,15 @@ class CartScreen extends StatelessWidget {
                       label: Text("\$${cart.itemsAmount}",
                           style:
                               Theme.of(context).primaryTextTheme.titleMedium)),
-                  TextButton(
-                    // style: ButtonStyle(
-                    //     foregroundColor:
-                    //         MaterialStateProperty.all<Color>(Colors.blue),
-                    //     overlayColor:
-                    //         MaterialStateProperty.resolveWith((states) {
-                    //       if (states.contains(MaterialState.hovered)) {
-                    //         return Colors.blue.withOpacity(0.04);
-                    //       }
-                    //       if (states.contains(MaterialState.focused) ||
-                    //           states.contains(MaterialState.pressed)) {
-                    //         return Colors.blue.withOpacity(0.12);
-                    //       }
-                    //       return null;
-                    //     })),
+                  LoadingTextButton(
                     child: const Text("Order Now"),
                     onPressed: () {
                       final orders =
                           Provider.of<Orders>(context, listen: false);
-                      orders.addOrder(
+                      final orderResult = orders.addOrder(
                           cart.items.values.toList(), cart.itemsAmount);
                       cart.clear();
+                      return orderResult;
                     },
                   ),
                 ],

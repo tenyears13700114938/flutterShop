@@ -11,7 +11,7 @@ class Orders with ChangeNotifier {
 
   List<OrderItem> get items => _items;
 
-  Orders(){
+  Orders() {
     fetchOrders();
   }
 
@@ -35,21 +35,20 @@ class Orders with ChangeNotifier {
                 price: productValue["price"].toDouble()));
           }
 
-          _items.add(OrderItem(id: key,
+          _items.add(OrderItem(
+              id: key,
               amount: value["amount"].toDouble(),
               products: products,
               dateTime: DateTime.parse(value["dateTime"])));
-          }
-              notifyListeners();
         }
-      });
+        notifyListeners();
+      }
+    });
   }
 
   Future<void> addOrder(List<CartItem> products, double amount) async {
     final orders = FirebaseDatabase.instance.ref().child("orders");
-    final addOrderKey = orders
-        .push()
-        .key!;
+    final addOrderKey = orders.push().key!;
     final timeStamp = DateTime.now();
 
     await orders.child(addOrderKey).set({
