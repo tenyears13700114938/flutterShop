@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/auth.dart';
@@ -101,6 +102,12 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       //user login
+      Provider.of<Auth>(context, listen: false)
+          .login(_authData['email']!, _authData['password']!)
+          .then((value) {
+        Navigator.of(context)
+            .pushReplacementNamed(ProductsOverviewScreen.routeName);
+      });
     } else {
       Provider.of<Auth>(context, listen: false)
           .signUp(_authData['email']!, _authData['password']!);
