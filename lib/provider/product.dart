@@ -17,7 +17,8 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavorite() {
+  Future<void> toggleFavorite() async {
+    await Future.delayed(Duration(seconds: 5));
     isFavorite = !isFavorite;
     notifyListeners();
   }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/cart_item.dart';
 import '../provider/cart.dart';
 import '../provider/product.dart';
+import 'loading_favorite_button.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key}) : super(key: key);
@@ -18,13 +19,7 @@ class ProductItem extends StatelessWidget {
       child: GridTile(
         footer: GridTileBar(
           leading: Consumer<Product>(builder: (ctx, product, _) {
-            return IconButton(
-              icon: Icon(
-                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () {
-                product.toggleFavorite();
-              },
-            );
+            return LoadingFavoriteButton(product: product);
           }),
           title: Text(product.title),
           backgroundColor: Colors.black45,
