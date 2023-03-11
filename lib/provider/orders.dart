@@ -1,7 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_shop_app/provider/product.dart';
-import 'package:intl/intl.dart';
 
 import '../models/cart_item.dart';
 import '../models/order_item.dart';
@@ -10,10 +8,6 @@ class Orders with ChangeNotifier {
   final List<OrderItem> _items = [];
 
   List<OrderItem> get items => _items;
-
-  Orders() {
-    fetchOrders();
-  }
 
   Future<void> fetchOrders() async {
     final orders = FirebaseDatabase.instance.ref().child("orders");
