@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/provider/auth.dart';
 import 'package:flutter_shop_app/provider/cart.dart';
 import 'package:flutter_shop_app/provider/orders.dart';
 import 'package:flutter_shop_app/provider/products.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_shop_app/screens/cart_screen.dart';
 import 'package:flutter_shop_app/screens/edit_products_screen.dart';
 import 'package:flutter_shop_app/screens/order_screen.dart';
 import 'package:flutter_shop_app/screens/product_detail_screen.dart';
-import 'package:flutter_shop_app/screens/products_overview_screen.dart';
 import 'package:flutter_shop_app/screens/user_products_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
           create: (_) => Products(),
         ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
-        ChangeNotifierProvider<Orders>(create: (_) => Orders())
+        ChangeNotifierProvider<Orders>(create: (_) => Orders()),
+        ChangeNotifierProvider<Auth>(create: (_) => Auth())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
