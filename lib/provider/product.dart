@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 class Product with ChangeNotifier {
@@ -18,7 +19,8 @@ class Product with ChangeNotifier {
   });
 
   Future<void> toggleFavorite() async {
-    await Future.delayed(Duration(seconds: 5));
+    final ref = FirebaseDatabase.instance.ref("products").child(id);
+    await ref.update({"isFavorite": !isFavorite});
     isFavorite = !isFavorite;
     notifyListeners();
   }
