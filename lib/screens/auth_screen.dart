@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/extension/firebase_auth_exception_extension.dart';
 import 'package:flutter_shop_app/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -91,6 +93,28 @@ class _AuthCardState extends State<AuthCard> {
   bool _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _onSubmitError(Object? error) {
+    var errorMessage = 'auth error!, please try again later!';
+    if (error is FirebaseAuthException) {
+      errorMessage = error.getErrorMessage();
+    }
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text('Auth Error.'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'))
+            ],
+          );
+        });
+  }
+
   void _submit() {
     final isValid = _formKey.currentState?.validate() == true;
     if (!isValid) {
@@ -107,10 +131,13 @@ class _AuthCardState extends State<AuthCard> {
           .then((value) {
         Navigator.of(context)
             .pushReplacementNamed(ProductsOverviewScreen.routeName);
+      }).onError((error, stackTrace) {
+        _onSubmitError(error);
       });
     } else {
       Provider.of<Auth>(context, listen: false)
-          .signUp(_authData['email']!, _authData['password']!);
+          .signUp(_authData['email']!, _authData['password']!)
+          .onError((error, stackTrace) => _onSubmitError(error));
     }
     setState(() {
       _isLoading = false;
