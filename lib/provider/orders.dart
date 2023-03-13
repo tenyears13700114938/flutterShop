@@ -9,8 +9,12 @@ class Orders with ChangeNotifier {
 
   List<OrderItem> get items => _items;
 
-  Future<void> fetchOrders() async {
-    final orders = FirebaseDatabase.instance.ref().child("orders");
+  Future<void> fetchOrders(String? uid) async {
+    if (uid == null) {
+      return;
+    }
+    final orders = FirebaseDatabase.instance.ref().child(uid).child("orders");
+    final List<OrderItem> orderItems = [];
     orders.get().then((value) {
       if (value.exists) {
         for (var entry in value.children) {
@@ -29,19 +33,25 @@ class Orders with ChangeNotifier {
                 price: productValue["price"].toDouble()));
           }
 
-          _items.add(OrderItem(
+          orderItems.add(OrderItem(
               id: key,
               amount: value["amount"].toDouble(),
               products: products,
               dateTime: DateTime.parse(value["dateTime"])));
         }
-        notifyListeners();
       }
+      _items.clear();
+      _items.addAll(orderItems);
+      notifyListeners();
     });
   }
 
-  Future<void> addOrder(List<CartItem> products, double amount) async {
-    final orders = FirebaseDatabase.instance.ref().child("orders");
+  Future<void> addOrder(
+      List<CartItem> products, double amount, String? uid) async {
+    if (uid == null) {
+      return;
+    }
+    final orders = FirebaseDatabase.instance.ref().child(uid).child("orders");
     final addOrderKey = orders.push().key!;
     final timeStamp = DateTime.now();
 

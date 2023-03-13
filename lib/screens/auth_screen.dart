@@ -128,10 +128,7 @@ class _AuthCardState extends State<AuthCard> {
       //user login
       Provider.of<Auth>(context, listen: false)
           .login(_authData['email']!, _authData['password']!)
-          .then((value) {
-        Navigator.of(context)
-            .pushReplacementNamed(ProductsOverviewScreen.routeName);
-      }).onError((error, stackTrace) {
+          .onError((error, stackTrace) {
         _onSubmitError(error);
       });
     } else {

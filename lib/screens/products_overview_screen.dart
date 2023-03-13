@@ -4,6 +4,7 @@ import 'package:flutter_shop_app/screens/cart_screen.dart';
 import 'package:flutter_shop_app/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/cart.dart';
 import '../widgets/products_grid.dart';
 
@@ -28,8 +29,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       setState(() {
         _isLoading = true;
       });
+      final uid = Provider.of<Auth>(context, listen: false).uid;
       Provider.of<Products>(context, listen: false)
-          .fetchAndSetProducts()
+          .fetchAndSetProducts(uid)
           .then((value) {
         setState(() {
           _isLoading = false;

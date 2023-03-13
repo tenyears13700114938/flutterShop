@@ -51,7 +51,11 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: const AuthScreen(),
+        home: Consumer<Auth>(builder: (context, auth, _) {
+          return auth.isLogin
+              ? const ProductsOverviewScreen()
+              : const AuthScreen();
+        }),
         routes: {
           ProductsOverviewScreen.routeName: (ctx) {
             return const ProductsOverviewScreen();

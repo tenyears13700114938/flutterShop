@@ -3,7 +3,9 @@ import 'package:flutter_shop_app/screens/edit_products_screen.dart';
 import 'package:flutter_shop_app/widgets/app_drawer.dart';
 import 'package:flutter_shop_app/widgets/user_product.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/products.dart';
 
 class UserProductsScreen extends StatelessWidget {
@@ -40,6 +42,7 @@ class UserProductsScreen extends StatelessWidget {
   }
 
   Future<void> _onRefresh(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    final uid = Provider.of<Auth>(context, listen: false).uid;
+    await Provider.of<Products>(context, listen: false).fetchAndSetProducts(uid);
   }
 }

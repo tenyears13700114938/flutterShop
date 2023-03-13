@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/provider/auth.dart';
 import 'package:flutter_shop_app/screens/edit_products_screen.dart';
 import 'package:flutter_shop_app/screens/user_products_screen.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +30,9 @@ class UserProduct extends StatelessWidget {
               icon: const Icon(Icons.edit)),
           IconButton(
             onPressed: () {
+              final uid = Provider.of<Auth>(context, listen: false).uid;
               Provider.of<Products>(context, listen: false)
-                  .deleteProduct(product.id)
+                  .deleteProduct(product.id, uid)
                   .onError((error, stackTrace) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("delete product failed..",

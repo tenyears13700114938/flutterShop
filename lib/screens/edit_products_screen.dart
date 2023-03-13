@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/product.dart';
 import '../provider/products.dart';
 
@@ -211,9 +212,10 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     setState(() {
       _isLoading = true;
     });
+    String? uid = Provider.of<Auth>(context, listen: false).uid;
     if (_product.id.isEmpty) {
       Provider.of<Products>(context, listen: false)
-          .addProduct(_product)
+          .addProduct(_product, uid)
           .then((value) {
         setState(() {
           _isLoading = false;
@@ -229,7 +231,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
       });
     } else {
       Provider.of<Products>(context, listen: false)
-          .updateProduct(_product)
+          .updateProduct(_product, uid)
           .then((value) {
         setState(() {
           _isLoading = false;

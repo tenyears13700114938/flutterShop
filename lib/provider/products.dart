@@ -15,11 +15,14 @@ class Products with ChangeNotifier {
   List<Product> get favoriteProducts =>
       _localProducts.where((element) => element.isFavorite).toList();
 
-  Future<void> fetchAndSetProducts() async {
-    final ref = FirebaseDatabase.instance.ref("products");
+  Future<void> fetchAndSetProducts(String? uid) async {
+    if(uid == null){
+      return;
+    }
+    final ref = FirebaseDatabase.instance.ref("products").child(uid);
     ref.get().then((snapShot) {
+      _localProducts.clear();
       if (snapShot.exists) {
-        _localProducts.clear();
         for (var entry in snapShot.children) {
           final key = entry.key!;
           final value = entry.value as Map<dynamic, dynamic>;
@@ -31,8 +34,8 @@ class Products with ChangeNotifier {
               imageUrl: value['imageUrl'],
               isFavorite: value['isFavorite']));
         }
-        notifyListeners();
       }
+      notifyListeners();
     });
   }
 
@@ -40,8 +43,11 @@ class Products with ChangeNotifier {
     return _localProducts.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addProduct(Product product) async {
-    final ref = FirebaseDatabase.instance.ref("products");
+  Future<void> addProduct(Product product, String? uid) async {
+    if (uid == null) {
+      return;
+    }
+    final ref = FirebaseDatabase.instance.ref("products").child(uid);
     final newKey = ref.push().key;
     await ref.child("$newKey").set({
       'title': product.title,
@@ -60,8 +66,13 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) async {
-    final ref = FirebaseDatabase.instance.ref("products").child(product.id);
+  Future<void> updateProduct(Product product, String? uid) async {
+    if (uid == null) {
+      return;
+    }
+
+    final ref =
+        FirebaseDatabase.instance.ref("products").child(uid).child(product.id);
     await ref.update({
       'title': product.title,
       'description': product.description,
@@ -78,8 +89,11 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> deleteProduct(String id) async {
-    final ref = FirebaseDatabase.instance.ref("products").child(id);
+  Future<void> deleteProduct(String id, String? uid) async {
+    if (uid == null) {
+      return;
+    }
+    final ref = FirebaseDatabase.instance.ref("products").child(uid).child(id);
     await ref.remove();
     _localProducts.removeWhere((element) => element.id == id);
     notifyListeners();

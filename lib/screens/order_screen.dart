@@ -3,6 +3,7 @@ import 'package:flutter_shop_app/widgets/app_drawer.dart';
 import 'package:flutter_shop_app/widgets/order_card.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/orders.dart';
 
 class OrderScreen extends StatelessWidget {
@@ -12,13 +13,15 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<Auth>(context, listen: false).uid;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Orders"),
         ),
         drawer: const AppDrawer(),
         body: FutureBuilder(
-          future: Provider.of<Orders>(context, listen: false).fetchOrders(),
+          future:
+              Provider.of<Orders>(context, listen: false).fetchOrders(userId),
           builder: (ctx, asyncSnapShot) {
             if (asyncSnapShot.connectionState == ConnectionState.waiting) {
               return const Center(

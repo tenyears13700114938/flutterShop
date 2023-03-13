@@ -3,6 +3,7 @@ import 'package:flutter_shop_app/widgets/cart_card.dart';
 import 'package:flutter_shop_app/widgets/loading_text_button.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/cart.dart';
 import '../provider/orders.dart';
 
@@ -37,8 +38,10 @@ class CartScreen extends StatelessWidget {
                     onPressed: () {
                       final orders =
                           Provider.of<Orders>(context, listen: false);
+                      final userId =
+                          Provider.of<Auth>(context, listen: false).uid;
                       final orderResult = orders.addOrder(
-                          cart.items.values.toList(), cart.itemsAmount);
+                          cart.items.values.toList(), cart.itemsAmount, userId);
                       cart.clear();
                       return orderResult;
                     },
