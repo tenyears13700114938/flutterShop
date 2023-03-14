@@ -181,14 +181,11 @@ class _AuthCardState extends State<AuthCard>
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: AnimatedBuilder(
-        animation: _heightAnimation,
-        builder: (ctx, ch) {
-          return Container(
-              height: _heightAnimation.value.height,
-              padding: const EdgeInsets.all(16.0),
-              child: ch);
-        },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+        height: _authMode == AuthMode.Login ? 260 : 320,
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
