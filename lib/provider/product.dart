@@ -18,8 +18,12 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> toggleFavorite() async {
-    final ref = FirebaseDatabase.instance.ref("products").child(id);
+  Future<void> toggleFavorite(String? userId) async {
+    if (userId == null) {
+      return;
+    }
+    final ref =
+        FirebaseDatabase.instance.ref("products").child(userId).child(id);
     await ref.update({"isFavorite": !isFavorite});
     isFavorite = !isFavorite;
     notifyListeners();

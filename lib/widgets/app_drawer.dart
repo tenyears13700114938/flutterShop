@@ -23,8 +23,8 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.shop),
             title: const Text("Shop"),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(ProductsOverviewScreen.routeName);
+              Navigator.of(context).popUntil((route) => false);
+              Navigator.of(context).pushNamed(ProductsOverviewScreen.routeName);
             },
           ),
           const Divider(),
@@ -32,7 +32,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.payment),
             title: const Text("Order"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+              Navigator.of(context).pushNamed(OrderScreen.routeName);
             },
           ),
           const Divider(),
@@ -40,8 +40,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.edit),
             title: const Text("Manage Products"),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(UserProductsScreen.routeName);
+              Navigator.of(context).pushNamed(UserProductsScreen.routeName);
             },
           ),
           const Divider(),
@@ -49,7 +48,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text("Log Out"),
             onTap: () {
-              Provider.of<Auth>(context,listen: false).logOut();
+              Provider.of<Auth>(context, listen: false).logOut().then((_) {});
             },
           )
         ],

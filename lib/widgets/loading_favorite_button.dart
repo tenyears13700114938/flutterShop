@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/auth.dart';
 import '../provider/product.dart';
 
 class LoadingFavoriteButton extends StatefulWidget {
@@ -34,7 +36,8 @@ class _LoadingIconBuutonState extends State<LoadingFavoriteButton> {
               setState(() {
                 _isLoading = true;
               });
-              widget.product.toggleFavorite().then((value) {
+              final userId = Provider.of<Auth>(context, listen: false).uid;
+              widget.product.toggleFavorite(userId).then((value) {
                 setState(() {
                   _isLoading = false;
                 });

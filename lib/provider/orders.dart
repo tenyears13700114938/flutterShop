@@ -13,7 +13,7 @@ class Orders with ChangeNotifier {
     if (uid == null) {
       return;
     }
-    final orders = FirebaseDatabase.instance.ref().child(uid).child("orders");
+    final orders = FirebaseDatabase.instance.ref().child("orders").child(uid);
     final List<OrderItem> orderItems = [];
     orders.get().then((value) {
       if (value.exists) {
@@ -51,7 +51,7 @@ class Orders with ChangeNotifier {
     if (uid == null) {
       return;
     }
-    final orders = FirebaseDatabase.instance.ref().child(uid).child("orders");
+    final orders = FirebaseDatabase.instance.ref().child("orders").child(uid);
     final addOrderKey = orders.push().key!;
     final timeStamp = DateTime.now();
 
