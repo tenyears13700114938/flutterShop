@@ -83,15 +83,37 @@ class AuthCard extends StatefulWidget {
   State<AuthCard> createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  Map<String, String> _authData = {
+  final Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
   bool _isLoading = false;
   final _passwordController = TextEditingController();
+  late AnimationController _animationController;
+  late Animation<Size> _heightAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _heightAnimation = Tween<Size>(
+            begin: const Size(double.infinity, 260),
+            end: const Size(double.infinity, 320))
+        .animate(CurvedAnimation(
+            parent: _animationController, curve: Curves.linear));
+    _heightAnimation.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
 
   void _onSubmitError(Object? error) {
     var errorMessage = 'auth error!, please try again later!';
@@ -146,10 +168,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+      _animationController.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      _animationController.reverse();
     }
   }
 
@@ -159,7 +183,7 @@ class _AuthCardState extends State<AuthCard> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _heightAnimation.value.height,
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
