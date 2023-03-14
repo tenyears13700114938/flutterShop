@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/extension/firebase_auth_exception_extension.dart';
-import 'package:flutter_shop_app/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/auth.dart';
@@ -106,7 +105,7 @@ class _AuthCardState extends State<AuthCard>
             end: const Size(double.infinity, 320))
         .animate(CurvedAnimation(
             parent: _animationController, curve: Curves.linear));
-    _heightAnimation.addListener(() => setState(() {}));
+    //_heightAnimation.addListener(() => setState(() {}));
   }
 
   @override
@@ -182,9 +181,14 @@ class _AuthCardState extends State<AuthCard>
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: Container(
-        height: _heightAnimation.value.height,
-        padding: const EdgeInsets.all(16.0),
+      child: AnimatedBuilder(
+        animation: _heightAnimation,
+        builder: (ctx, ch) {
+          return Container(
+              height: _heightAnimation.value.height,
+              padding: const EdgeInsets.all(16.0),
+              child: ch);
+        },
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
