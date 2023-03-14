@@ -217,20 +217,31 @@ class _AuthCardState extends State<AuthCard>
                     onSaved: (value) {
                       _authData['password'] = value!;
                     }),
-                if (_authMode == AuthMode.Signup)
-                  TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration:
-                        const InputDecoration(labelText: 'Confirm password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Password not matches!';
-                            }
-                          }
-                        : (value) => null,
+                AnimatedContainer(
+                  constraints: BoxConstraints(
+                    minHeight: _authMode == AuthMode.Signup ? 60 : 0,
+                    maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
                   ),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                  child: AnimatedOpacity(
+                    opacity: _authMode == AuthMode.Signup ? 1 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: TextFormField(
+                      enabled: _authMode == AuthMode.Signup,
+                      decoration:
+                          const InputDecoration(labelText: 'Confirm password'),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.Signup
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return 'Password not matches!';
+                              }
+                            }
+                          : (value) => null,
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),

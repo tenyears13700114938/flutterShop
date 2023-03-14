@@ -14,7 +14,6 @@ class Auth with ChangeNotifier {
 
   Auth() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      print("auth state change user != null ${user != null} uid ${user?.uid}");
       _isLogin = user != null;
       _uid = user?.uid;
       notifyListeners();
