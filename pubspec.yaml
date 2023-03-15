@@ -41,6 +41,7 @@ dependencies:
   firebase_database: ^10.0.14
   http: ^0.13.5
   firebase_auth: ^4.2.2
+  transparent_image: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop_app/screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../models/cart_item.dart';
 import '../provider/cart.dart';
@@ -52,9 +53,13 @@ class ProductItem extends StatelessWidget {
             Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
                 arguments: product.id);
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: product.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
