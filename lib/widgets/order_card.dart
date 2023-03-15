@@ -18,26 +18,34 @@ class _OrderCardState extends State<OrderCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(6),
-      child: Column(children: [
-        ListTile(
-          title: Text("\$${widget.item.amount}"),
-          subtitle:
-              Text(DateFormat("dd/MM/yyyy hh:mm").format(widget.item.dateTime)),
-          trailing: IconButton(
-            icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-            onPressed: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height:
+          isExpanded ? min(widget.item.products.length * 20 + 140, 400) : 100,
+      curve: Curves.fastOutSlowIn,
+      child: Card(
+        margin: const EdgeInsets.all(6),
+        child: Column(children: [
+          ListTile(
+            title: Text("\$${widget.item.amount}"),
+            subtitle: Text(
+                DateFormat("dd/MM/yyyy hh:mm").format(widget.item.dateTime)),
+            trailing: IconButton(
+              icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+              onPressed: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+            ),
           ),
-        ),
-        if (isExpanded)
-          Container(
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-            height: min(widget.item.products.length * 20 + 40, 300),
+            height: isExpanded
+                ? min(widget.item.products.length * 20 + 40, 300)
+                : 0,
+            curve: Curves.fastOutSlowIn,
             child: ListView.builder(
               itemBuilder: (ctx, index) {
                 final product = widget.item.products[index];
@@ -58,7 +66,8 @@ class _OrderCardState extends State<OrderCard> {
               itemCount: widget.item.products.length,
             ),
           )
-      ]),
+        ]),
+      ),
     );
   }
 }
