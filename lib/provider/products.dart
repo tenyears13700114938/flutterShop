@@ -20,6 +20,7 @@ class Products with ChangeNotifier {
       return;
     }
     final ref = FirebaseDatabase.instance.ref("products").child(uid);
+    //final ref = FirebaseDatabase.instance.ref("products").child("skk5GA7FZ9VoM36nu2FOHuHH2c32");
     ref.get().then((snapShot) {
       _localProducts.clear();
       if (snapShot.exists) {

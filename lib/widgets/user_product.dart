@@ -36,13 +36,13 @@ class UserProduct extends StatelessWidget {
                   .onError((error, stackTrace) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("delete product failed..",
-                      style: TextStyle(color: Theme.of(context).errorColor)),
+                      style: TextStyle(color: Theme.of(context).cardColor)),
                   duration: const Duration(seconds: 2),
                 ));
               });
             },
             icon: const Icon(Icons.delete),
-            color: Theme.of(context).errorColor,
+            color: Theme.of(context).cardColor,
           )
         ],
       ),

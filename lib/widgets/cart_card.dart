@@ -14,7 +14,7 @@ class CartCard extends StatelessWidget {
     return Dismissible(
       key: ValueKey(item.id),
       background: Container(
-        color: Theme.of(context).errorColor,
+        color: Theme.of(context).cardColor,
         alignment: Alignment.centerRight,
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         child: const Icon(
@@ -54,10 +54,10 @@ class CartCard extends StatelessWidget {
           padding: const EdgeInsets.all(4),
           child: ListTile(
             leading: CircleAvatar(
-              child: FittedBox(child: Text("\$${item.price}")),
+              child: FittedBox(child: Text("${item.price}")),
             ),
             title: Text(item.title),
-            subtitle: Text("Total: \$${item.price * item.quantity} "),
+            subtitle: Text("Total: ${item.price * item.quantity} "),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
