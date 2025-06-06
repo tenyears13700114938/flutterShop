@@ -155,7 +155,26 @@ class _AuthCardState extends State<AuthCard>
     } else {
       Provider.of<Auth>(context, listen: false)
           .signUp(_authData['email']!, _authData['password']!)
-          .onError((error, stackTrace) => _onSubmitError(error));
+          .then((onValue) async {
+        if (onValue != null) {
+          print("myDebug signUp value is $onValue");
+          String? result = await showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(content: Text(onValue), actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ]);
+              });
+          if (result == "OK") {
+            _switchAuthMode();
+          }
+        }
+      }).onError((error, stackTrace) {
+        _onSubmitError(error);
+      });
     }
     setState(() {
       _isLoading = false;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop_app/provider/AppLifecycleService.dart';
 import 'package:flutter_shop_app/provider/auth.dart';
 import 'package:flutter_shop_app/provider/cart.dart';
 import 'package:flutter_shop_app/provider/orders.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print("myDebug myApp build...");
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Products>(
@@ -35,7 +37,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
-        ChangeNotifierProvider<Auth>(create: (_) => Auth())
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProvider(create: (_) => AppLifecycleService())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
